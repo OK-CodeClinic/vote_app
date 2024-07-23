@@ -95,7 +95,7 @@ spec:
     spec:
       containers:
       - name: vote-app-container
-        image: okcodeclinic/vote_app:latest
+        image: kardozo111/vote_app:new
         ports:
         - containerPort: 5000
         env:

@@ -71,9 +71,9 @@ spec:
     spec:
       containers:
       - name: vote-app-container
-        image: kardozo111/vote_app:latest
+        image: okcodeclinic/vote_app:latest
         ports:
-        - containerPort: 80
+        - containerPort: 5000
         env:
         - name: SECRET_KEY
           valueFrom:
@@ -91,9 +91,9 @@ spec:
               name: vote-app-secrets
               key: MYSQL_PASSWORD
         - name: MYSQL_HOST
-          value: "mysql-service"  # This is a service name, not a secret
+          value: "mysql-service"
         - name: MYSQL_DB
-          value: "voting_system"  # This is a constant value, not a secret
+          value: "voting_system"
 ---
 apiVersion: v1
 kind: Service
@@ -107,5 +107,5 @@ spec:
   ports:
   - protocol: TCP
     port: 80
-    targetPort: 80
+    targetPort: 5000
   type: LoadBalancer

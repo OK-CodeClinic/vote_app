@@ -1,0 +1,111 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deployment
+  labels:
+    app: mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:5.7
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secrets
+              key: MYSQL_ROOT_PASSWORD
+        - name: MYSQL_DATABASE
+          value: "voting_system"
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secrets
+              key: MYSQL_USER
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secrets
+              key: MYSQL_PASSWORD
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+  labels:
+    app: mysql
+spec:
+  selector:
+    app: mysql
+  ports:
+  - protocol: TCP
+    port: 3306
+    targetPort: 3306
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vote-app-deployment
+  labels:
+    app: vote-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: vote-app
+  template:
+    metadata:
+      labels:
+        app: vote-app
+    spec:
+      containers:
+      - name: vote-app-container
+        image: okcodeclinic/vote_app:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: vote-app-secrets
+              key: SECRET_KEY
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: vote-app-secrets
+              key: MYSQL_USER
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: vote-app-secrets
+              key: MYSQL_PASSWORD
+        - name: MYSQL_HOST
+          value: "mysql-service"  # This is a service name, not a secret
+        - name: MYSQL_DB
+          value: "voting_system"  # This is a constant value, not a secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vote-app-service
+  labels:
+    app: vote-app
+spec:
+  selector:
+    app: vote-app
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  type: LoadBalancer

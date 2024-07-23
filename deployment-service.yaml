@@ -71,7 +71,7 @@ spec:
     spec:
       containers:
       - name: vote-app-container
-        image: okcodeclinic/vote_app:latest
+        image: kardozo111/vote_app:latest
         ports:
         - containerPort: 80
         env:

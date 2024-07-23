@@ -37,6 +37,30 @@ spec:
             secretKeyRef:
               name: mysql-secrets
               key: MYSQL_PASSWORD
+        volumeMounts:
+        - name: mysql-init
+          mountPath: /docker-entrypoint-initdb.d/
+      volumes:
+      - name: mysql-init
+        configMap:
+          name: mysql-init-configmap
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-init-configmap
+data:
+  init.sql: |
+    CREATE DATABASE IF NOT EXISTS voting_system;
+    USE voting_system;
+
+    CREATE TABLE IF NOT EXISTS candidates (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        votes INT DEFAULT 0
+    );
+
+    INSERT INTO candidates (name) VALUES ('Neal Dunn (REP)'), ('Al Lawson (DEM)');
 ---
 apiVersion: v1
 kind: Service

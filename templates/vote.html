@@ -1,18 +1,11 @@
 {% extends "base.html" %}
 
-{% block title %}Vote -  Representative in Congress{% endblock %}
+{% block title %}Vote for your Congress Man{% endblock %}
 
 {% block content %}
-    <h1 class="text-center mb-4">Cast Your Vote</h1>
-    <form action="{{ url_for('vote') }}" method="post">
-        <div class="form-group">
-            <label for="candidate">Select Candidate</label>
-            <select class="form-control" id="candidate" name="candidate_id" required>
-                {% for candidate in candidates %}
-                    <option value="{{ candidate.id }}">{{ candidate.name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary btn-block">Submit Vote</button>
+    <h1 class="mt-5">Vote for {{ candidate.name }}</h1>
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        {{ form.submit(class="btn btn-primary") }}
     </form>
 {% endblock %}

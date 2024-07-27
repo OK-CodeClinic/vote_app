@@ -1,5 +1,5 @@
 
-# Terraform-Driven Simple App System on Amazon EKS
+# Terraform-Driven Simple Voting App on Amazon EKS
 
 ## Description
 This project showcase how a  simple voting system built in Python, utilizing Amazon EKS for deployment and Terraform for infrastructure setup. This project leverages the power of Kubernetes for orchestration and Terraform for automated, scalable infrastructure management.
